@@ -18,6 +18,9 @@ def 함수이름 (입력값) :
 import turtle as t
 import random
 
+score = 0
+isPlay = False
+
 devil = t.Turtle()
 devil.shape("turtle")
 devil.color("DarkRed")
@@ -40,20 +43,49 @@ def turn_left() :
      t.setheading(180)
 def turn_down() :
      t.setheading(270)
+
+def start() :
+    global isPlay
+    if isPlay == False :
+        isPlay = True
+        t.clear()
+        play()
+     
 def play():
+     global score
+     global isPlay
      t.forward(10)
      ang = devil.towards(t.pos())
      devil.setheading(ang)
      devil.forward(8)
 
+     #먹이를 먹었을때
      if t.distance(feed) < 12 :
+         score = score+1
+         t.write(score)
          feed_x = random.randint(-230, 230)
          feed_y = random.randint(-230, 230)
          feed.goto(feed_x, feed_y)
-    
-     if t.distance(devil) > 12:
-         t.ontimer(play, 100)
 
+    #악당한테 잡혔을때
+     if t.distance(devil) < 12 :
+        text = "Score : " + str(score)
+        message("Game Over.", text)
+        isPlay = False
+        score = 0
+
+     #게임 지속 조건
+     if isPlay :
+        t.ontimer(play, 100)
+
+def message(m1, m2) :
+    t.clear
+    t.goto(0,100)
+    t.write(m1, False, "center", ("",20))
+    t.goto(0, -100)
+    t.write(m2, False, "center", ("", 15))
+    t.home()
+        
 t.setup(500,500)
 t.bgcolor("aquamarine1")
 t.shape("turtle")
@@ -65,25 +97,8 @@ t.onkeypress(turn_right, "Right")
 t.onkeypress(turn_up, "Up")
 t.onkeypress(turn_left, "Left")
 t.onkeypress(turn_down, "Down")
+t.onkeypress(start, "space")
 
 t.listen()
-play()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+message("Turtle Run", "[Space]")
 
